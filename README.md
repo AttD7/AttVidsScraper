@@ -63,6 +63,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 | /vk               |          ✅          |   GET    |    url    | Extraction VK (oid & id) limitée à 720p.                                              |
 | /sendvid          |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
 | /sibnet           |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
+| /voe              |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
 
 
 ---
@@ -135,6 +136,18 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
     "status": "success"
   }
 ```
+
+#### 5. Sendvid Video 
+
+- **Description** : To do (in coming soon).
+- 
+#### 6. Sibnet Video 
+
+- **Description** : To do (in coming soon).
+
+#### 7. Voe Video 
+
+- **Description** : To do (in coming soon).
 
 ---
 
