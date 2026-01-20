@@ -61,9 +61,11 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 | /callistanise     |          ✅          |   GET    |    url    | Extraction HLS (Callistanise, Smoothpre, Dingtezuni, Movearnpre, Minochinos, etc...). |
 | /embed4me         |          ✅          |   GET    |    id     | Extraction pour Embed4me / Lplayer via ID.                                            |
 | /vk               |          ✅          |   GET    |    url    | Extraction VK (oid & id) limitée à 720p.                                              |
+| /vidoza           |          ✅          |   GET    |    url    | Extraction pour vidoza / via url.                                                     |
+| /voe              |          ✅          |   GET    |    url    | Extraction pour vode / via url.                                                       |
+| /doodstream       |          ✅          |   GET    |    url    | Extraction pour doodstream / via url et d0000d.                                       |
 | /sendvid          |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
 | /sibnet           |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
-| /voe              |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
 
 
 ---
@@ -137,15 +139,59 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
   }
 ```
 
-#### 5. Sendvid Video 
+#### 5. Vidoza 
+
+- **Description** : Extraction pour vidoza via url.
+- **Embed URL Exemple** : https://videzz.net/embed-9b6zbu7135u0.html
+- **Exemple** : http://localhost:8888/vidoza?url=https://videzz.net/embed-9b6zbu7135u0.html
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/vidoza-proxy?url=https%3A//str41.vidoza.net/vod/v2/nv...",
+    "status": "success"
+  }
+```
+
+#### 6. Voe
+
+- **Description** : Extraction pour voe / via url.
+- **Embed URL Exemple** : https://voe.sx/e/llwq1wy1qfye
+- **Exemple** : http://localhost:8888/voe?url=https://voe.sx/e/llwq1wy1qfye
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/voe-proxy?url=https%3A//cdn-e4srqqyuolvqfr5r.edgeon-bandwidth.com/engine/download/01/1593...",
+    "status": "success"
+  }
+```
+
+#### 7. Doodstream / D000D
+
+- **Description** : Extraction pour doodstream / via url et d0000d.
+- **Embed URL Exemple** : https://d0000d.com/e/x84gtg15zdr0
+- **Exemple** : http://localhost:8888/doodstream?url=https://d0000d.com/e/x84gtg15zdr0
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/doodstream-proxy?url=https%3A//ior159p.cloudatacdn...",
+    "status": "success"
+  }
+```
+
+#### 8. Sendvid Video
 
 - **Description** : To do (in coming soon).
-- 
-#### 6. Sibnet Video 
-
-- **Description** : To do (in coming soon).
-
-#### 7. Voe Video 
+-
+#### 9. Sibnet Video
 
 - **Description** : To do (in coming soon).
 
