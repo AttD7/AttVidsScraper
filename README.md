@@ -9,7 +9,7 @@
 ### 1. Cloner le projet
 
 ```bash
-git clone [https://github.com/AttD7/AttVidsScraper.git](https://github.com/AttD7/AttVidsScraper.git)
+git clone [https://github.com/AttVidsScraper/AttVidsScraper.git](https://github.com/AttVidsScraper/AttVidsScraper.git)
 cd AttVidsScraper
 ```
 
@@ -190,7 +190,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 #### 8. Sendvid Video
 
 - **Description** : To do (in coming soon).
--
+
 #### 9. Sibnet Video
 
 - **Description** : To do (in coming soon).
@@ -199,7 +199,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 
 ### 🛡️ Gestion des Proxies
 
-Tous les proxies (/vidmoly-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre `url` encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.
+Tous les proxies (/doodstream-proxy, /vidoza-proxy, /voe-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre `url` encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.
 
 - **Paramètre** : `url` (String, Required).
 - **Fonction** : Réécrit les fichiers  `MPD|.m3u8` à la volée pour que les segments `.mp4|.ts` passent par le serveur, contournant ainsi les blocages de domaine et les restrictions CORS.
