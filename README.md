@@ -9,7 +9,7 @@
 ### 1. Cloner le projet
 
 ```bash
-git clone [https://github.com/AttVidsScraper/AttVidsScraper.git](https://github.com/AttVidsScraper/AttVidsScraper.git)
+git clone [https://github.com/AttD7/AttVidsScraper.git](https://github.com/AttD7/AttVidsScraper.git)
 cd AttVidsScraper
 ```
 
