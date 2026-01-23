@@ -57,16 +57,19 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 
 | Endpoint          | available & working  | Méthode  | Paramètre |                                    Description                                        |
 | :---------------- | :------------------: | :------: | --------: | ------------------------------------------------------------------------------------: |
-| /vidmoly          |          ✅          |   GET    |    url    | Extraction HLS via Playwright.                                                        |
 | /callistanise     |          ✅          |   GET    |    url    | Extraction HLS (Callistanise, Smoothpre, Dingtezuni, Movearnpre, Minochinos, etc...). |
-| /embed4me         |          ✅          |   GET    |    id     | Extraction pour Embed4me / Lplayer via ID.                                            |
-| /vk               |          ✅          |   GET    |    url    | Extraction VK (oid & id) limitée à 720p.                                              |
-| /vidoza           |          ✅          |   GET    |    url    | Extraction pour vidoza / via url.                                                     |
-| /voe              |          ✅          |   GET    |    url    | Extraction pour vode / via url.                                                       |
 | /doodstream       |          ✅          |   GET    |    url    | Extraction pour doodstream / via url et d0000d.                                       |
-| /sendvid          |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
-| /sibnet           |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
-
+| /embed4me         |          ✅          |   GET    |    id     | Extraction pour Embed4me / Lplayer via ID.                                            |
+| /my-mail          |          ✅          |   GET    |    id     | Extraction pour my mail video via api using ID.                                       |
+| /sendvid          |          ✅          |   GET    |    url    | Extraction pour sendvid / via url.                                                    |
+| /sibnet           |          ✅          |   GET    |    url    | Extraction pour video sibnet / via url.                                               |
+| /streamtape       |          ✅          |   GET    |    url    | Extraction pour streamtape via Playwright.                                            |
+| /vidmoly          |          ✅          |   GET    |    url    | Extraction HLS via Playwright.                                                        |
+| /vidoza           |          ✅          |   GET    |    url    | Extraction pour vidoza / via url.                                                     |
+| /voe              |          ✅          |   GET    |    url    | Extraction pour voe / via url.                                                        |
+| /vk               |          ✅          |   GET    |    url    | Extraction VK (oid & id) limitée à 720p.                                                |
+| /yourupload       |          ✅          |   GET    |    url    | Extraction pour yourupload via url.                                                   |
+| /... (in search)  |          ❌          |   GET    |    url    | To do (in coming soon)                                                                |
 
 ---
 
@@ -88,7 +91,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
   }
 ```
 
-#### 2. Callistanise (earnvids.com) 
+#### 2. Callistanise (earnvids.com)
 
 - **Domaines alternatifs** : Callistanise.com, Smoothpre.com, Dingtezuni.com, Movearnpre.com, Minochinos.com, etc...
 - **Description** : Extraction HLS pour Callistanise via Requests.
@@ -105,7 +108,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
   }
 ```
 
-#### 3. Embed4me (Lplayer) 
+#### 3. Embed4me (Lplayer)
 
 - **Description** : Extraction pour Embed4me / Lplayer via ID.
 - **Embed URL Exemple** : https://lpayer.embed4me.com/#xv8jw
@@ -122,7 +125,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
   }
 ```
 
-#### 4. VK Video 
+#### 4. VK Video
 
 - **Description** : Extraction pour VK / VK Video Player via id et oid.
 - **Embed URL Exemple** : https://vk.com/video_ext.php?oid=755747641&id=456240670
@@ -139,7 +142,7 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
   }
 ```
 
-#### 5. Vidoza 
+#### 5. Vidoza
 
 - **Description** : Extraction pour vidoza via url.
 - **Embed URL Exemple** : https://videzz.net/embed-9b6zbu7135u0.html
@@ -189,17 +192,89 @@ L'API expose les points de terminaison suivants pour l'extraction de liens vidé
 
 #### 8. Sendvid Video
 
-- **Description** : To do (in coming soon).
+- **Description** : Extraction pour sendvid / via url.
+- **Embed URL Exemple** : https://sendvid.com/embed/iv161471
+- **Exemple** : http://localhost:8888/sendvid?url=https://sendvid.com/embed/iv161471
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/sendvid-proxy?url=https%3A//videos2.sendvid.com/a6/...",
+    "status": "success"
+  }
+```
 
 #### 9. Sibnet Video
 
-- **Description** : To do (in coming soon).
+- **Description** : Extraction pour Sibnet / via url.
+- **Embed URL Exemple** : https://video.sibnet.ru/shell.php?videoid=4670054
+- **Exemple** : http://localhost:8888/sibnet?url=https://video.sibnet.ru/shell.php?videoid=4670054
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/sibnet-proxy?url=https%3A//dv97.sibnet.ru/43/39/81/4...",
+    "status": "success"
+  }
+```
+
+#### 10. My Mail Video
+
+- **Description** : Extraction pour my mail video via api.
+- **Embed URL Exemple** : https://my.mail.ru/video/embed/7927577985584989376
+- **Exemple** : http://localhost:8888/my-mail?id=7927577985584989376
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/my-mail-proxy?url=https%3A//cdn64.my.mail.ru/hv/71535330...",
+    "status": "success"
+  }
+```
+
+#### 11. Yourupload Video
+
+- **Description** : Extraction pour Yourupload video via url.
+- **Embed URL Exemple** : https://www.yourupload.com/embed/NbDbYiR07ul8
+- **Exemple** : http://localhost:8888/yourupload?url=https://www.yourupload.com/embed/NbDbYiR07ul8
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/yourupload-proxy?url=https%3A//vidcache.net%3A8161/...",
+    "status": "success"
+  }
+```
+
+#### 12. Streamtape Video
+
+- **Description** : Extraction pour streamtape video via Playwright.
+- **Embed URL Exemple** : https://streamtape.com/e/XjMyMx71waSXb2
+- **Exemple** : http://localhost:8888/streamtape?url=https://streamtape.com/e/XjMyMx71waSXb2
+- **Retour attendu** :
+
+```bash
+# JSON
+
+  {
+    "source": "http://localhost:8888/streamtape-proxy?url=https%3A//streamtape.com/get_video%3Fid%3DXjMy...",
+    "status": "success"
+  }
+```
 
 ---
 
 ### 🛡️ Gestion des Proxies
 
-Tous les proxies (/doodstream-proxy, /vidoza-proxy, /voe-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre `url` encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.
+Tous les proxies (/sibnet-proxy, /sendvid-proxy, /yourupload-proxy, /my-mail-proxy, /streamtape-proxy, /doodstream-proxy, /vidoza-proxy, /voe-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre `url` encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.
 
 - **Paramètre** : `url` (String, Required).
 - **Fonction** : Réécrit les fichiers  `MPD|.m3u8` à la volée pour que les segments `.mp4|.ts` passent par le serveur, contournant ainsi les blocages de domaine et les restrictions CORS.
