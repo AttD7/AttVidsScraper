@@ -1,23 +1,25 @@
 import time
-from time import time
 from flask import Flask, request, jsonify, url_for, Response, stream_with_context
 from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
 import logging
 import random
-from random import choices
 from string import ascii_letters, digits
 import re
+import jsbeautifier
 from playwright.async_api import async_playwright
 import json
+import html
 import codecs
 import base64
 import binascii
+import asyncio
 import requests
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-from urllib.parse import urljoin, quote, unquote, urlsplit
+from urllib.parse import urljoin, quote, unquote, urlsplit, urlparse, parse_qs
 import urllib3
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logging.basicConfig(level=logging.INFO)
@@ -83,6 +85,8 @@ def get_html():
                         'https://dingtezuni.com',
                         'https://movearnpre.com',
                         'https://minochinos.com',
+                        'https://secured.lol',
+                        'hdsplay.xyz',
                     ],
                     'example' : f'{BASE_API}/callistanise?url=https://dingtezuni.com/embed/fdbfypeipkyc',
                     'example_return' : {
@@ -160,7 +164,7 @@ def get_html():
                     },
                 },
                 '/voe' : {
-                    'description': 'Extraction pour vode / via url.',
+                    'description': 'Extraction pour voe / via url.',
                     'parameter' : [{
                         'name' : 'url',
                         'type' : 'string',
@@ -176,8 +180,93 @@ def get_html():
                         'status': 'success'
                     },
                 },
+                '/streamtape' : {
+                    'description': 'Extraction pour streamtape via Playwright.',
+                    'parameter' : [{
+                        'name' : 'url',
+                        'type' : 'string',
+                        'required' : True
+                    }],
+                    'methods' : [
+                    'GET'
+                    ],
+                    'embed_url' : 'https://streamtape.com/e/XjMyMx71waSXb2',
+                    'example' : f'{BASE_API}/streamtape?url=https://streamtape.com/e/XjMyMx71waSXb2',
+                    'example_return' : {
+                        'source': f'{BASE_API}/streamtape-proxy?url=https%3A//streamtape.com/get_video%3Fid%3DXjMyMx71waSXb2%26expires%3D1768944318%26ip%3DFOSOD0xKR0SXFxf%26token%3DpQ0IBbrOVchj%26stream%3D1',
+                        'status': 'success'
+                    },
+                },
+                '/my-mail' : {
+                    'description': 'Extraction pour my mail video via api.',
+                    'parameter' : [{
+                        'name' : 'id',
+                        'type' : 'string',
+                        'required' : True
+                    }],
+                    'methods' : [
+                    'GET'
+                    ],
+                    'embed_url' : 'https://my.mail.ru/video/embed/7927577985584989376',
+                    'example' : f'{BASE_API}/my-mail?id=7927577985584989376',
+                    'example_return' : {
+                        'source': f'{BASE_API}/my-mail-proxy?url=https%3A//cdn64.my.mail.ru/hv/71535330.mp4%3Fslave%5B%5D%3Ds%253Ahttp%253A%252F%252F10.146.243.4%253A9091%252Fvideo4%252F71535330-hv%26p%3Df%26video_key%3Df02a7d59a750e3736328c75681f1ce02dd3e5253%26expire_at%3D1769173200%26touch%3D1610145287%26reg%3D225%26sign%3D4635d831e7f6e9957e9f9fe2e45f787cad0dea6d',
+                        'status': 'success'
+                    },
+                },
+                '/yourupload' : {
+                    'description': 'Extraction pour yourupload.',
+                    'parameter' : [{
+                        'name' : 'url',
+                        'type' : 'string',
+                        'required' : True
+                    }],
+                    'methods' : [
+                    'GET'
+                    ],
+                    'embed_url' : 'https://www.yourupload.com/embed/NbDbYiR07ul8',
+                    'example' : f'{BASE_API}/yourupload?url=https://www.yourupload.com/embed/NbDbYiR07ul8',
+                    'example_return' : {
+                        'source': f'{BASE_API}/yourupload-proxy?url=https%3A//vidcache.net%3A8161/a202601230MuV5M8N837/video.mp4',
+                        'status': 'success'
+                    },
+                },
+                '/sendvid' : {
+                    'description': 'Extraction pour sendvid.',
+                    'parameter' : [{
+                        'name' : 'url',
+                        'type' : 'string',
+                        'required' : True
+                    }],
+                    'methods' : [
+                    'GET'
+                    ],
+                    'embed_url' : 'https://sendvid.com/embed/iv161471',
+                    'example' : f'{BASE_API}/sendvid?url=https://sendvid.com/embed/iv161471',
+                    'example_return' : {
+                        'source': f'{BASE_API}/sendvid-proxy?url=https%3A//videos2.sendvid.com/a6/82/iv161471.mp4%3Fvalidfrom%3D1769156754%26validto%3D1769171154%26rate%3D250k%26ip%3D94.106.215.122%26hash%3DufwAKHkEVEZYCpfXdQu7m7gq2l4%253D',
+                        'status': 'success'
+                    },
+                },
+                '/sibnet' : {
+                    'description': 'Extraction pour sibnet.',
+                    'parameter' : [{
+                        'name' : 'url',
+                        'type' : 'string',
+                        'required' : True
+                    }],
+                    'methods' : [
+                    'GET'
+                    ],
+                    'embed_url' : 'https://video.sibnet.ru/shell.php?videoid=4670054',
+                    'example' : f'{BASE_API}/sibnet?url=https://video.sibnet.ru/shell.php?videoid=4670054',
+                    'example_return' : {
+                        'source': f'{BASE_API}/sibnet-proxy?url=https%3A//dv97.sibnet.ru/43/39/81/4339811.mp4%3Fst%3DOozdhUzk9WMPkOoELX1OSg%26e%3D1769193000%26stor%3D45%26noip%3D1',
+                        'status': 'success'
+                    },
+                },
                 'proxies_info' : {
-                'description': 'Tous les proxies (/voe-proxy, /vidoza-proxy, /doodstream-proxy, /vidmoly-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre \'url\' encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.',
+                'description': 'Tous les proxies (/sibnet-proxy, /sendvid-proxy, /yourupload-proxy, /my-mail-proxy, /streamtape-proxy, /voe-proxy, /vidoza-proxy, /doodstream-proxy, /vidmoly-proxy, /vk-proxy, /callistanise-proxy, /embed4me-proxy) acceptent un paramètre \'url\' encodé et retournent le flux vidéo ou le fichier m3u8 réécrit.',
                     'parameter' : [{
                         'name' : 'url',
                         'type' : 'string',
@@ -746,7 +835,7 @@ async def vidoza_scraper():
 
         if video_url:
             # Proxying automatique
-            proxy_url = f"{request.host_url}vidoza-proxy?url={quote(video_url)}"
+            proxy_url = f"{BASE_API}/vidoza-proxy?url={quote(video_url)}"
             return jsonify({"source": proxy_url, "status": "success"})
         return jsonify({"error": "Vidéo non trouvée"}), 404
     except Exception as e:
@@ -819,8 +908,8 @@ def extract_doodstream(html_content, original_url):
     response = requests.get(f"{domain}{pass_md5_url}", headers=headers, verify=False)
     base_url = response.text
 
-    random_str = ''.join(choices(ascii_letters + digits, k=10))
-    expiry = int(time() * 1000)
+    random_str = ''.join(random.choices(ascii_letters + digits, k=10))
+    expiry = int(time.time() * 1000)
 
     return f"{base_url}{random_str}?token={token}&expiry={expiry}"
 
@@ -836,7 +925,7 @@ async def doodstream_scraper():
         video_url = extract_doodstream(resp.text, url) # On passe 'url' ici
 
         if video_url:
-            proxy_url = f"{request.host_url}doodstream-proxy?url={quote(video_url)}"
+            proxy_url = f"{BASE_API}/doodstream-proxy?url={quote(video_url)}"
             return jsonify({"source": proxy_url, "status": "success"})
         return jsonify({"error": "Extraction échouée"}), 404
     except Exception as e:
@@ -985,7 +1074,7 @@ async def voe_scraper():
             return jsonify({"error": "source_not_found"}), 404
 
         # 4. Retourner le résultat (Pas besoin de proxy pour VOE en général, mais optionnel)
-        proxy_url = f"{request.host_url}voe-proxy?url={quote(source_found)}"
+        proxy_url = f"{BASE_API}/voe-proxy?url={quote(source_found)}"
         return jsonify({
             "source": proxy_url,
             "status": "success"
@@ -1057,5 +1146,667 @@ def voe_proxy():
     except Exception as e:
         return str(e), 500
 # voe END
+# streamtape START
+
+
+async def get_streamtape_url_with_playwright(target_url):
+    async with async_playwright() as p:
+        # Lancement du navigateur en mode headless
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+        page = await context.new_page()
+
+        try:
+            # On va sur la page de Streamtape
+            await page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
+
+            # On attend spécifiquement que la balise video#mainvideo soit présente
+            # même si elle est injectée par le JS obfusqué
+            video_selector = "video#mainvideo"
+            await page.wait_for_selector(video_selector, timeout=10000)
+
+            # Extraction de l'attribut src
+            video_src = await page.get_attribute(video_selector, "src")
+
+            await browser.close()
+            return video_src
+        except Exception as e:
+            print(f"Erreur Playwright: {e}")
+            await browser.close()
+            return None
+
+# streamtape
+@app.route('/streamtape')
+async def streamtape_scraper():
+    url = request.args.get('url')
+    if not url: return jsonify({"error": "URL manquante"}), 400
+
+    try:
+        # On utilise Playwright pour exécuter le JS
+        video_url = await get_streamtape_url_with_playwright(url)
+
+        if video_url:
+            # Nettoyage et formatage
+            if video_url.startswith('//'):
+                video_url = 'https:' + video_url
+
+            if 'stream=1' not in video_url:
+                video_url += '&stream=1'
+
+            # Envoi vers ton proxy pour bypasser le Referer/IP
+            proxy_url = f"{BASE_API}/streamtape-proxy?url={quote(video_url)}"
+            return jsonify({
+                "source": proxy_url,
+                "status": "success"
+            })
+
+        return jsonify({"error": "Playwright n'a pas trouvé la source vidéo"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# streamtape
+@app.route('/streamtape-proxy')
+def streamtape_proxy():
+    video_url = unquote(request.args.get('url', ''))
+    if not video_url:
+        return "URL manquante", 400
+
+    # Ajout du paramètre stream=1 si absent pour forcer le flux
+    if 'stream=1' not in video_url:
+        video_url += '&stream=1'
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://streamtape.com/',
+        'Accept': '*/*'
+    }
+
+    range_header = request.headers.get('Range')
+    if range_header:
+        headers['Range'] = range_header
+
+    try:
+        # 1. On autorise les redirections (302 Found) pour atteindre tapecontent.net
+        # stream=True est crucial pour ne pas saturer la RAM
+        resp = requests.get(video_url, headers=headers, stream=True, timeout=20, verify=False, allow_redirects=True)
+
+        # 2. On prépare les headers de sortie
+        excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection', 'content-disposition']
+        proxy_headers = [(n, v) for (n, v) in resp.raw.headers.items() if n.lower() not in excluded_headers]
+
+        # 3. Forcer le navigateur à traiter cela comme un flux vidéo
+        proxy_headers.append(('Content-Disposition', 'inline'))
+        proxy_headers.append(('Access-Control-Allow-Origin', '*'))
+        proxy_headers.append(('Cache-Control', 'no-cache'))
+
+        # On récupère le Content-Type réel (souvent video/mp4 sur tapecontent)
+        content_type = resp.headers.get('Content-Type', 'video/mp4')
+
+        return Response(
+            resp.iter_content(chunk_size=512 * 1024),
+            status=resp.status_code,
+            headers=proxy_headers,
+            content_type=content_type
+        )
+    except Exception as e:
+        return str(e), 500
+
+# streamtape END
+# filemoon|byse START
+def decrypt_xor_payload(encoded_payload, encoded_key):
+    try:
+        # 1. Decode Base64
+        key = base64.b64decode(encoded_key)
+        data = base64.b64decode(encoded_payload)
+
+        # 2. Application du XOR (boucle circulaire sur la clé)
+        decrypted = bytearray()
+        for i in range(len(data)):
+            decrypted.append(data[i] ^ key[i % len(key)])
+
+        return decrypted.decode('utf-8', errors='ignore')
+    except Exception as e:
+        print(f"Erreur de décodage XOR: {e}")
+        return None
+
+def deobfuscate_filemoon_keywords(script_content):
+    # 1. Extraction de la chaîne K entre les guillemets simples
+    match = re.search(r"var K='([^']+)'", script_content)
+    if not match:
+        return []
+
+    k_encoded = match.group(1)
+
+    # 2. Logique JS inversée : .reduce((v,g,L)=>L%2?v+g:g+v)
+    # Cette opération réorganise la chaîne par paires
+    k_shuffled = ""
+    for i in range(len(k_encoded)):
+        if i % 2:
+            k_shuffled = k_shuffled + k_encoded[i]
+        else:
+            k_shuffled = k_encoded[i] + k_shuffled
+
+    # 3. Séparation par le délimiteur 'z' pour obtenir les mots-clés
+    return k_shuffled.split('z')
+
+# Utilisation avec le script que vous avez fourni précédemment
+script_crypte = """votre_script_js_ici"""
+mots_cles = deobfuscate_filemoon_keywords(script_crypte)
+
+# Affichage pour analyse
+for i, mot in enumerate(mots_cles):
+    print(f"Index {i}: {mot}")
+# filemoon|byse
+async def get_filemoon_url(target_url):
+    async with async_playwright() as p:
+        # Lancement du navigateur
+        browser = await p.chromium.launch(headless=True)
+
+        # On utilise un contexte avec un Referer correct (vu sur tes captures)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            extra_http_headers={
+                "Referer": "https://v6.voiranime.com/",
+                "Origin": "https://f16px.com"
+            }
+        )
+
+        page = await context.new_page()
+
+        # Variable pour stocker l'URL trouvée
+        video_data = {"url": None}
+
+        # --- INTERCEPTION RÉSEAU (C'est ici que ça se joue) ---
+        async def handle_request(request):
+            # On cherche spécifiquement le master.m3u8 identifié dans tes captures
+            if "master.m3u8" in request.url or "index-v1-a1.m3u8" in request.url:
+                print(f"DEBUG: Flux vidéo détecté -> {request.url}")
+                video_data["url"] = request.url
+
+        page.on("request", handle_request)
+
+        try:
+            await page.goto(target_url, wait_until="networkidle")
+
+            # On extrait TOUTES les variables globales pour trouver l'URL
+            # On cherche dans l'objet de config du player (souvent jwplayer().getConfig())
+            video_url = await page.evaluate("""() => {
+                if (window.jwplayer) {
+                    return jwplayer().getPlaylist()[0].file;
+                }
+                // Si pas de jwplayer, on cherche dans le DOM
+                return document.querySelector('video') ? document.querySelector('video').src : null;
+            }""")
+
+            await browser.close()
+            return video_url
+        except:
+            await browser.close()
+            return None
+# filemoon|byse
+@app.route('/filemoon')
+async def filemoon_scraper():
+    url = request.args.get('url')
+    if not url: return jsonify({"error": "URL manquante"}), 400
+
+    video_url = await get_filemoon_url(url)
+
+    if video_url:
+        # Filemoon utilise du HLS (.m3u8), on utilise ton voe-proxy qui est déjà prêt pour le HLS
+        #proxy_url = f"{BASE_API}/filemoon-proxy?url={quote(video_url)}"
+        proxy_url = f"{video_url}"
+        return jsonify({
+            "source": proxy_url,
+            "status": "success",
+        })
+
+    return jsonify({"error": "Lien m3u8 non trouvé"}), 403
+# filemoon|byse END
+# my.mail START
+@app.route('/my-mail', methods=['GET'])
+def extract_my_mail_video_source():
+    video_id = request.args.get('id')
+    api_url = f"https://my.mail.ru/+/video/meta/{video_id}"
+    headers = get_mail_headers()
+
+    try:
+        r = requests.get(api_url, headers=headers, timeout=10)
+        if r.status_code != 200:
+            return jsonify({"status": "error", "message": f"Erreur API: {r.status_code}"}), 400
+
+        data = r.json()
+        video_list = data.get('videos', [])
+
+        if not video_list:
+            return jsonify({"status": "error", "message": "Aucune vidéo trouvée"}), 404
+
+        # --- Logique d'extraction de la meilleure qualité ---
+
+        # On définit un ordre de priorité (plus l'index est bas, meilleure est la qualité)
+        priority = ["1080p", "720p", "480p", "360p", "240p"]
+
+        # On trie la liste : on cherche l'élément dont la 'key' apparaît le plus tôt dans notre liste priority
+        # Si une clé n'est pas dans la liste, on lui donne un index élevé (99)
+        best_video = min(video_list, key=lambda x: priority.index(x['key']) if x['key'] in priority else 99)
+
+        # On récupère l'URL et on ajoute 'https:' si elle commence par '//'
+        final_url = best_video.get('url', '')
+        if final_url.startswith('//'):
+            final_url = f"https:{final_url}"
+
+        proxy_url = f"{BASE_API}/my-mail-proxy?url={quote(final_url)}"
+        return jsonify({
+            "status": "success",
+            "source": proxy_url
+        })
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# my.mail
+def get_mail_headers():
+    return {
+        'User-Agent': USER_AGENTS[0],
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Referer': 'https://my.mail.ru/',
+        'Origin': 'https://my.mail.ru',
+    }
+
+# my.mail
+@app.route('/my-mail-proxy')
+def mail_proxy():
+    target_url = request.args.get('url')
+    if not target_url:
+        return "URL manquante", 400
+
+    # On s'assure que l'URL commence bien par https:
+    if target_url.startswith('//'):
+        target_url = f"https:{target_url}"
+
+    def generate():
+        # On utilise stream=True pour ne pas charger tout le fichier MP4 en RAM
+        with requests.get(target_url, headers=get_mail_headers(), stream=True, timeout=30) as r:
+            # On renvoie les morceaux (chunks) au fur et à mesure
+            for chunk in r.iter_content(chunk_size=8192):
+                yield chunk
+
+    # On récupère les headers de réponse originaux pour garder le type de contenu (video/mp4)
+    try:
+        # On fait une petite requête HEAD pour obtenir les infos du fichier
+        head = requests.head(target_url, headers=get_mail_headers(), timeout=5)
+        content_type = head.headers.get('Content-Type', 'video/mp4')
+        content_length = head.headers.get('Content-Length')
+
+        headers = {'Content-Type': content_type}
+        if content_length:
+            headers['Content-Length'] = content_length
+
+        return Response(stream_with_context(generate()), headers=headers)
+
+    except Exception as e:
+        return str(e), 500
+# my.mail END
+# yourupload START
+@app.route('/yourupload', methods=['GET'])
+def extract_yourupload_video_source():
+    url = request.args.get('url')
+    headers = {
+        'User-Agent': random.choice(USER_AGENTS),
+        'Accept': '*/*',
+        'Referer': 'https://www.yourupload.com/',
+        'Origin': 'https://www.yourupload.com',
+    }
+
+    try:
+        r = requests.get(url, headers=headers, timeout=10)
+        if r.status_code != 200:
+            return jsonify({"status": "error", "message": f"Erreur YourUpload: {r.status_code}"}), 400
+
+        html = r.text
+
+        # Regex pour capturer le contenu entre les guillemets de la clé 'file'
+        # Elle cherche: file: 'URL' ou file: "URL"
+        match = re.search(r"file\s*:\s*['\"]([^'\"]+)['\"]", html)
+
+        if match:
+            final_url = match.group(1)
+
+            # Gestion du protocole relatif //
+            if final_url.startswith('//'):
+                final_url = f"https:{final_url}"
+
+            # Construction de l'URL avec votre proxy
+            proxy_url = f"{BASE_API}/yourupload-proxy?url={quote(final_url)}"
+
+            return jsonify({
+                "status": "success",
+                "source": proxy_url
+            })
+        else:
+            return jsonify({"status": "error", "message": "Fichier source non trouvé dans JWPlayer"}), 404
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# yourupload
+@app.route('/yourupload-proxy')
+def yourupload_proxy():
+    target_url = request.args.get('url')
+    if not target_url:
+        return "URL manquante", 400
+
+    if target_url.startswith('//'):
+        target_url = f"https:{target_url}"
+
+    # On récupère le header Range envoyé par le lecteur client (ex: bytes=0-)
+    range_header = request.headers.get('Range', None)
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36',
+        'Referer': 'https://www.yourupload.com/',
+        'Accept': '*/*',
+    }
+    if range_header:
+        headers['Range'] = range_header
+
+    def generate():
+        # allow_redirects=True est crucial ici pour gérer le 302 vers le serveur de lecture final
+        with requests.get(target_url, headers=headers, stream=True, allow_redirects=True, timeout=30) as r:
+            # On propage les headers de contenu importants du serveur final vers le client
+            excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+            proxy_response_headers = [
+                (name, value) for (name, value) in r.raw.headers.items()
+                if name.lower() not in excluded_headers
+            ]
+
+            for chunk in r.iter_content(chunk_size=128 * 1024): # 128KB chunks pour la vidéo
+                yield chunk
+
+    # On effectue une requête HEAD rapide pour obtenir les métadonnées de la vidéo (taille, type)
+    try:
+        head_res = requests.head(target_url, headers=headers, allow_redirects=True, timeout=10)
+
+        # On construit les headers de réponse pour le navigateur
+        res_headers = {
+            'Content-Type': head_res.headers.get('Content-Type', 'video/mp4'),
+            'Accept-Ranges': 'bytes',
+            'Access-Control-Allow-Origin': '*'
+        }
+
+        # Gestion du Content-Range pour permettre de "scroller" dans la vidéo
+        if 'Content-Range' in head_res.headers:
+            res_headers['Content-Range'] = head_res.headers['Content-Range']
+        if 'Content-Length' in head_res.headers:
+            res_headers['Content-Length'] = head_res.headers['Content-Length']
+
+        # Si le client a demandé un Range, on répond avec un statut 206 (Partial Content)
+        status_code = 206 if range_header else 200
+
+        return Response(
+            stream_with_context(generate()),
+            status=status_code,
+            headers=res_headers
+        )
+
+    except Exception as e:
+        return str(e), 500
+# yourupload END
+# sendvid START
+@app.route('/sendvid', methods=['GET'])
+def extract_sendvid_video_source():
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"status": "error", "message": "URL manquante"}), 400
+
+    # Extraire l'ID (Logique extractSendvidId)
+    match_id = re.search(r'sendvid\.com\/(?:embed\/)?([a-zA-Z0-9\-_]+)', url)
+    video_id = match_id.group(1) if match_id else None
+
+    if not video_id:
+        return jsonify({"status": "error", "message": "ID Sendvid invalide"}), 400
+
+    embed_url = f"https://sendvid.com/embed/{video_id}"
+
+    # Configuration du FetchWithRetry
+    retries = 5
+    base_delay = 0.2 # 200ms
+    timeout = 15
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Referer': embed_url,
+        'Connection': 'keep-alive',
+    }
+
+    last_error = None
+    html_content = None
+
+    # Logique de Retry
+    for attempt in range(retries + 1):
+        try:
+            r = requests.get(embed_url, headers=headers, timeout=timeout)
+            if r.status_code == 200:
+                html_content = r.text
+                break
+            last_error = f"HTTP {r.status_code}"
+        except Exception as e:
+            last_error = str(e)
+
+        if attempt < retries:
+            # Backoff exponentiel : delay * 2^attempt + jitter
+            sleep_time = (base_delay * (2 ** attempt)) + (random.randint(0, 200) / 1000)
+            time.sleep(sleep_time)
+
+    if not html_content:
+        return jsonify({"status": "error", "message": f"Échec après retries: {last_error}"}), 500
+
+    # Recherche de la source (Logique preg_match source src)
+    source_match = re.search(r'source\s+src="([^"]+)"', html_content, re.IGNORECASE)
+
+    if source_match:
+        # html.unescape équivaut à html_entity_decode en PHP
+        video_url = html.unescape(source_match.group(1))
+
+        if video_url.startswith('//'):
+            video_url = f"https:{video_url}"
+
+        # Utilisation de votre logique de proxy
+        proxy_url = f"{BASE_API}/sendvid-proxy?url={quote(video_url)}"
+
+        return jsonify({
+            "status": "success",
+            "source": proxy_url
+        })
+    else:
+        return jsonify({"status": "error", "message": "Source non trouvée dans le HTML"}), 404
+
+# sendvid
+@app.route('/sendvid-proxy')
+def sendvid_proxy():
+    target_url = request.args.get('url')
+    if not target_url:
+        return "URL manquante", 400
+
+    range_header = request.headers.get('Range', None)
+
+    headers = {
+        'User-Agent': USER_AGENTS[0],
+        'Referer': 'https://sendvid.com/',
+    }
+    if range_header:
+        headers['Range'] = range_header
+
+    def generate():
+        with requests.get(target_url, headers=headers, stream=True, allow_redirects=True, timeout=30) as r:
+            for chunk in r.iter_content(chunk_size=128 * 1024):
+                yield chunk
+
+    try:
+        # Vérification des infos de fichier (HEAD)
+        head = requests.head(target_url, headers=headers, allow_redirects=True, timeout=10)
+
+        res_headers = {
+            'Content-Type': head.headers.get('Content-Type', 'video/mp4'),
+            'Accept-Ranges': 'bytes',
+            'Access-Control-Allow-Origin': '*'
+        }
+
+        if 'Content-Range' in head.headers:
+            res_headers['Content-Range'] = head.headers['Content-Range']
+        if 'Content-Length' in head.headers:
+            res_headers['Content-Length'] = head.headers['Content-Length']
+
+        status_code = 206 if range_header else 200
+        return Response(stream_with_context(generate()), status=status_code, headers=res_headers)
+
+    except Exception as e:
+        return str(e), 500
+# sendvid END
+# sibnet START
+@app.route('/sibnet', methods=['GET'])
+def extract_sibnet_video_source():
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"status": "error", "message": "URL manquante"}), 400
+
+    # 1. Extraction de l'ID (Logique extractVideoId)
+    video_id = None
+    match_id = re.search(r'videoid=(\d+)', url, re.I) or re.search(r'video(\d+)', url, re.I)
+    if match_id:
+        video_id = match_id.group(1)
+
+    if not video_id:
+        return jsonify({"status": "error", "message": "ID Sibnet non trouvé"}), 400
+
+    player_url = f"https://video.sibnet.ru/shell.php?videoid={video_id}"
+    referer = f"https://video.sibnet.ru/video{video_id}"
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': referer,
+        'Accept': 'text/html'
+    }
+
+    try:
+        # 2. Récupération du HTML du player
+        r = requests.get(player_url, headers=headers, timeout=10)
+        html_content = r.text
+
+        # 3. Patterns de recherche (Logique $patterns)
+        patterns = [
+            r'player\.src\(\s*\[\s*\{\s*src:\s*["\']([^"\']+\.mp4)[^"\']*["\']',
+            r'player\.src\(\s*["\']([^"\']+\.mp4)["\']\s*\)',
+            r'<video[^>]+src=["\']([^"\']+\.mp4)["\']',
+            r'file:\s*["\']([^"\']+\.mp4)["\']',
+            r'"file"\s*:\s*"([^"]+\.mp4)"',
+            r'(/v/[a-z0-9]+/\d+\.mp4)'
+        ]
+
+        found_path = None
+        for p in patterns:
+            m = re.search(p, html_content, re.I)
+            if m:
+                found_path = m.group(1)
+                break
+
+        if not found_path:
+            return jsonify({"status": "error", "message": "Source MP4 non trouvée"}), 404
+
+        # Nettoyage de l'URL brute
+        if found_path.startswith('//'):
+            video_url = f"https:{found_path}"
+        elif found_path.startswith('/'):
+            video_url = f"https://video.sibnet.ru{found_path}"
+        else:
+            video_url = found_path
+
+        # 4. Résolution des redirections (Logique followRedirectsManual)
+        final_video_url = follow_sibnet_redirects(video_url, referer)
+
+        # 5. Construction de la réponse avec Proxy
+        proxy_url = f"{BASE_API}/sibnet-proxy?url={quote(final_video_url)}"
+
+        return jsonify({
+            "status": "success",
+            "sources":  proxy_url
+        })
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+# sibnet
+def follow_sibnet_redirects(url, referer):
+    """ Équivalent de followRedirectsManual en PHP """
+    curr = url
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Referer': referer
+    }
+    for _ in range(8):
+        try:
+            # allow_redirects=False pour capturer le header 'Location' manuellement
+            r = requests.head(curr, headers=headers, allow_redirects=False, timeout=10)
+            if 300 <= r.status_code < 400 and 'Location' in r.headers:
+                loc = r.headers['Location']
+                if loc.startswith('//'):
+                    loc = 'https:' + loc
+                elif loc.startswith('/'):
+                    parsed = urlparse(curr)
+                    loc = f"https://{parsed.netloc}{loc}"
+                curr = loc
+                continue
+            return curr
+        except:
+            return curr
+    return curr
+# sibnet
+@app.route('/sibnet-proxy')
+def sibnet_proxy():
+    target_url = request.args.get('url')
+    if not target_url:
+        return "URL manquante", 400
+
+    range_header = request.headers.get('Range', None)
+
+    # Sibnet nécessite souvent video.sibnet.ru comme referer même pour le fichier final
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Referer': 'https://video.sibnet.ru/',
+        'Accept': '*/*',
+    }
+    if range_header:
+        headers['Range'] = range_header
+
+    def generate():
+        with requests.get(target_url, headers=headers, stream=True, allow_redirects=True, timeout=30) as r:
+            for chunk in r.iter_content(chunk_size=128 * 1024):
+                yield chunk
+
+    try:
+        # On utilise GET au lieu de HEAD car Sibnet bloque parfois les HEAD sur les fichiers mp4
+        with requests.get(target_url, headers=headers, stream=True, timeout=10) as head_res:
+            res_headers = {
+                'Content-Type': head_res.headers.get('Content-Type', 'video/mp4'),
+                'Accept-Ranges': 'bytes',
+                'Access-Control-Allow-Origin': '*'
+            }
+
+            if 'Content-Range' in head_res.headers:
+                res_headers['Content-Range'] = head_res.headers['Content-Range']
+            if 'Content-Length' in head_res.headers:
+                res_headers['Content-Length'] = head_res.headers['Content-Length']
+
+            status_code = 206 if range_header else 200
+            return Response(stream_with_context(generate()), status=status_code, headers=res_headers)
+
+    except Exception as e:
+        return str(e), 500
+# sibnet END
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8888, debug=True)
