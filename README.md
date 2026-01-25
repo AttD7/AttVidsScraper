@@ -287,7 +287,7 @@ Tous les proxies (/sibnet-proxy, /sendvid-proxy, /yourupload-proxy, /my-mail-pro
 
 - **Qualité Vidéo** : L'extraction VK est plafonnée à la qualité 720p maximum pour optimiser la bande passante et assurer la compatibilité.
 - **Playwright Stealth** : Le moteur utilise `playwright-stealth` pour éviter la détection par les systèmes anti-bot lors du rendu des pages.
-- **Déploiement** : Pour une mise en production, il est fortement recommandé d'utiliser un serveur WSGI comme `gunicorn` ou `uvicorn` et avec un timeout assé large.
+- **Déploiement** : Pour une mise en production, modiffier le fichier principal app.py a la ligne 30: `BASE_API = "http://localhost:8888"` => `BASE_API = "https://mon-domaine.com"`  et il est fortement recommandé d'utiliser un serveur WSGI comme `gunicorn` ou `uvicorn` et avec un timeout assé large.
 ```bash
 # bash
 
