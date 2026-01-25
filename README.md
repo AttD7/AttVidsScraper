@@ -1,6 +1,6 @@
-# AttVidsScraper - Video Extraction API
+# ApiVideosScraper - Video Extraction API
 
-**AttVidsScraper** est une API Flask robuste conçue pour l'extraction de flux vidéo (HLS/MP4) à partir de diverses plateformes comme Voe, Vidoza, Doodstream, Vidmoly, VK, Callistanise et Embed4me. Elle intègre un système de proxy dynamique pour contourner les restrictions IP et les blocages CORS.
+**ApiVideosScraper** est une API Flask robuste conçue pour l'extraction de flux vidéo (HLS/MP4) à partir de diverses plateformes comme Voe, Vidoza, Doodstream, Vidmoly, VK, Callistanise et Embed4me. Elle intègre un système de proxy dynamique pour contourner les restrictions IP et les blocages CORS.
 
 ---
 
@@ -9,7 +9,7 @@
 ### 1. Cloner le projet
 
 ```bash
-git clone [https://github.com/AttD7/AttVidsScraper.git](https://github.com/AttD7/AttVidsScraper.git)
+git clone [https://github.com/AttD7/ApiVideosScraper.git](https://github.com/AttD7/AttVidsScraper.git)
 cd AttVidsScraper
 ```
 
